@@ -1,9 +1,7 @@
 
 ### download plot image
 ### download course data
-### bulk plot (e.g., plot all BIO 111s) 
-### new example file with minimum set of variables needed in a file
-### 
+### remove course_id/row_id dependency (use row_id) or move both/one to prepare plot data function? 
 
 server<-function(input,output,session){
   
@@ -89,13 +87,12 @@ server<-function(input,output,session){
   
   observe({
     ### update course selections from course list
-    course <- isolate(input$course)
-    updateSelectInput(
-      session = session,
-      inputId =  "course",
-      choices = sort(c(course, rv$class_list)),
-      selected = course
-    )
+    course <- isolate(c(input$course,input$new_course))
+
+    updatePickerInput(session = session,
+                     inputId = "course",
+                     selected=course,
+                     choices = sort(rv$class_list))
   })
   
  
@@ -363,7 +360,7 @@ observe({
     am_pm<-map_chr(1:input$meeting_num,~input[[paste0("AM_PM",.)]])
     dur<-map_dbl(1:input$meeting_num,~input[[paste0("course_dur",.)]])
     
-    print(input$new_course)
+    
     
     if(any(is.na(hour)) | any(is.na(min)) | any(is.na(dur)) | 
        any(hour>12) | any(hour<1) | any(min>59) | any(min<0) |

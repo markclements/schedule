@@ -3,6 +3,7 @@ ui <- dashboardPagePlus(
   skin = "blue",
   dashboardHeaderPlus(),
   dashboardSidebar(collapsed = TRUE,
+                   width=100,
                    sidebarMenu(
                      menuItem("Upload", tabName = "upload", icon = icon("file-upload")),
                      menuItem(
@@ -17,7 +18,8 @@ ui <- dashboardPagePlus(
       tabName = "upload",
       fluidRow(
       boxPlus(width=6,
-              title=div("Getting Started \n (Click - to hide)"), 
+              status = "info",
+              title=div("Getting Started"), 
               collapsible = TRUE,
               collapsed = FALSE,
               closable = FALSE,
@@ -38,6 +40,7 @@ ui <- dashboardPagePlus(
       fluidRow(
       boxPlus(
         width = 6,
+        status = "info",
         fileInput(
           inputId = "file",
           label = div("Upload Excel file"),
@@ -50,6 +53,7 @@ ui <- dashboardPagePlus(
       fluidRow(
       boxPlus(
         width = 6,
+        status = "info",
         title = "Summary",
         closable = FALSE,
         collapsible = TRUE,
@@ -67,14 +71,21 @@ ui <- dashboardPagePlus(
           closable = FALSE,
           status = "info",
           collapsible = FALSE,
-          title = "Select Courses",
-          solidHeader = TRUE,
-          selectizeInput(
-            inputId = "course",
-            label = NA,
-            choices = NA,
-            multiple = TRUE
-          ),
+          #title = "Select Courses",
+          #solidHeader = TRUE,
+          pickerInput(inputId = "course",
+                      label = NULL,
+                      choices = NA,
+                      multiple = TRUE,
+                      options = list(
+                        `live-search` = TRUE,
+                        `actions-box` = TRUE,
+                        title = "Select Courses",
+                        `selected-text-format` = "count > 3"))),
+        boxPlus(
+          width = NULL,
+          closable = FALSE,
+          status = "info",
           actionButton(inputId = "add_course",
                        label = paste0("Add course"))
         ),
