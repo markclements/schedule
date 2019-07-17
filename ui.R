@@ -54,7 +54,7 @@ ui <- dashboardPagePlus(
       boxPlus(
         width = 6,
         status = "info",
-        title = "Summary",
+        title = "Summary", 
         closable = FALSE,
         collapsible = TRUE,
         collapsed = TRUE,
