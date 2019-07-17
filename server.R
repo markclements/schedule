@@ -2,6 +2,7 @@
 ### download plot image
 ### download course data
 ### remove course_id/row_id dependency (use row_id) or move both/one to prepare plot data function? 
+### allow user to modify course number
 
 server<-function(input,output,session){
   
