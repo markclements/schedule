@@ -1,2 +1,2 @@
 # schedule
-college course schedule planning R shiny application 
+Schedule planning of college courses using R and shiny.   
