@@ -1,0 +1,22 @@
+---
+title: "  "
+author: "Mark Clements"
+date: "7/2/2019"
+output: html_document
+---
+### Using the application  
+
+1.  Upload an Excel file from your computer. If you do not have a properly formated file, you may download an example <a href="example_course_file.xlsx" target="_blank">HERE</a>. You may edit the exmample file if desired, just be sure to follow the instructions provided in the file. Files that are not properly formatted will cause the application to crash.  
+  
+2.  Choose courses to display by using the drop down menu located below the upload Excel file button. To remove a course, select it and delete it from the list. 
+  
+3. Placing the mouse cursor over a color-coded box will display course name and CRN number.  
+  
+4. Clicking on the color-coded box will display course properties on the right-hand side of the application. You may edit and update course properties here.  
+  
+5.  To download an image of the course grid, use the download link located in the upper right corner of the course grid display. 
+  
+6.  You may zoom and pan the course grid display by double clicking (zoom) and dragging (pan) the mouse cursor on the display.  Reset zoom and pan using the controls located in the upper right corner of the display.  
+   
+  
+<img src="app_running.png" height="400px"/>  
