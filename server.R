@@ -414,21 +414,21 @@ observe({
     removeModal()
     }
     
-    output$download_plot<-downloadHandler(
-      
-      filename = function() {
-          paste('course_schedule-', Sys.Date(), '.png', sep='')
-        },
-      content = function(file) {
-        rv$plot_data %>% 
-          plot_schedule(.)->plot
-        ggsave(file,plot=plot)
-         
-        }
-      
-    )
+  })
+  
+  output$download_plot<-downloadHandler(
     
-    })
+    filename = function() {
+      paste('course_schedule-', Sys.Date(), '.png', sep='')
+    },
+    content = function(file) {
+      rv$plot_data %>% 
+        plot_schedule(.)->plot
+      ggsave(file,plot=plot,width = 7,height = 5)
+      
+    }
+    
+  )
 
   session$allowReconnect(TRUE)
 }
