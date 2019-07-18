@@ -140,9 +140,9 @@ ui <- dashboardPagePlus(
           status = "info",
           width = NULL,
           solidHeader = TRUE,
-          actionButton(inputId="download_plot",
+          downloadButton(outputId="download_plot",
                       label="Image"),
-          actionButton(inputId="download_data",
+          downloadButton(outputId="download_data",
                        label="Data")
         )## end box
       ),

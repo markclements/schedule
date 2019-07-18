@@ -380,7 +380,7 @@ observe({
            hour=hour,
            min=min,
            am_pm=am_pm,
-           dur=dur,
+           dur=dur
            ) %>%
       mutate(course=input$new_course,
              campus=input$select_campus_new,
@@ -413,6 +413,20 @@ observe({
   
     removeModal()
     }
+    
+    output$download_plot<-downloadHandler(
+      
+      filename = function() {
+          paste('course_schedule-', Sys.Date(), '.png', sep='')
+        },
+      content = function(file) {
+        rv$plot_data %>% 
+          plot_schedule(.)->plot
+        ggsave(file,plot=plot)
+         
+        }
+      
+    )
     
     })
 
