@@ -107,11 +107,10 @@ observe({
   output$plot <- renderPlot({
     validate(need(nrow(rv$schedule) > 0, message = "Upload a file or add courses manually"))
     
-    validate(need(nrow(rv$plot_data) > 0, message = "Select courses from the drop down menu to display course schedule"))
+    validate(need(length(input$course) > 0, message = "Select courses from the drop down menu to display course schedule"))
     
     rv$plot_data %>%
       plot_schedule(.)
-        
   })
   
 
@@ -155,11 +154,10 @@ observe({
     #### Modify course attribute dynamic UI ### 
     modalDialog(size = "s",
                 div(
-                   # textInput(inputId = "course_id",
-                   #            label="Selected Course",
-                   #            value=row$course,
-                   #            width = "100%"),
-                  h3(glue::glue("Modify and update ",{row$course})),
+                   textInput(inputId = "course_id",
+                              label="Selected Course",
+                              value=row$course),
+                 # h3(glue::glue("Modify and update ",{row$course})),
                     selectInput(inputId = "course_day",
                                 label="Day",
                                 choices = c("M","T","W","R","F","S"),
@@ -211,6 +209,8 @@ observe({
     
     if(rv$course_id>0) {
       #x[x$day=="M","time"]
+      rv$schedule[rv$schedule$course_id == rv$course_id, "course"] <<-
+        input$course_id
       rv$schedule[rv$schedule$course_id == rv$course_id, "day"] <<-
         input$course_day
       rv$schedule[rv$schedule$course_id == rv$course_id, "campus"] <<-
@@ -222,7 +222,8 @@ observe({
       AM_PM <- isolate(input$AM_PM)
       
       if (!is.na(hour) &
-          !is.na(min) & !is.na(dur)) {
+          !is.na(min) & 
+          !is.na(dur)) {
         if (AM_PM == "PM" & hour < 12)
           hour <- hour + 12
         

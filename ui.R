@@ -131,7 +131,20 @@ ui <- dashboardPagePlus(
             step = 300,
             ticks = F
           )
-        ) ## end box
+        ),## end box
+        boxPlus(
+          title="Download",
+          collapsible = TRUE,
+          collapsed = TRUE,
+          closable = FALSE,
+          status = "info",
+          width = NULL,
+          solidHeader = TRUE,
+          actionButton(inputId="download_plot",
+                      label="Image"),
+          actionButton(inputId="download_data",
+                       label="Data")
+        )## end box
       ),
       ## end column
       column(
