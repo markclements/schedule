@@ -1,4 +1,6 @@
-ui <- dashboardPagePlus(
+ui <- function(request){
+  
+  dashboardPagePlus(
   title = "Schedule Application",
   skin = "blue",
   collapse_sidebar = TRUE, 
@@ -181,4 +183,5 @@ ui <- dashboardPagePlus(
       
   ))
   )
-  )            
+  )  
+}
