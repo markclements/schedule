@@ -433,12 +433,12 @@ observe({
   # Bookmarking code --------------------------
   onBookmark(function(state) {
     state$values$schedule <- rv$schedule
-    state$values$course <- input$course
   })
   
   onRestore(function(state) {
     rv$schedule <- state$values$schedule
-    input$course <- state$values$course
+    course <- state$input$course
+    updatePickerInput(session, "course", selected = course)
   })
   
   setBookmarkExclude(c("file","add_course","download_plot"))
