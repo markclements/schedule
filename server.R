@@ -439,7 +439,7 @@ observe({
     rv$schedule <- state$values$schedule
   })
   
-  setBookmarkExclude("file")
+  setBookmarkExclude(c("file","add_course"))
 
   # output$download_data<-downloadHandler(
   #   
