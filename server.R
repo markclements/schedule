@@ -429,6 +429,15 @@ observe({
     }
     
   )
+  
+  # Bookmarking code --------------------------
+  onBookmark(function(state) {
+    state$values$schedule <- rv$schedule
+  })
+  
+  onRestore(function(state) {
+    rv$schedule <- state$values$schedule
+  })
 
   # output$download_data<-downloadHandler(
   #   
