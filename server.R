@@ -433,13 +433,15 @@ observe({
   # Bookmarking code --------------------------
   onBookmark(function(state) {
     state$values$schedule <- rv$schedule
+    state$values$course <- input$course
   })
   
   onRestore(function(state) {
     rv$schedule <- state$values$schedule
+    input$course <- state$values$course
   })
   
-  setBookmarkExclude(c("file","add_course"))
+  setBookmarkExclude(c("file","add_course","download_plot"))
 
   # output$download_data<-downloadHandler(
   #   
