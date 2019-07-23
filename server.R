@@ -438,6 +438,8 @@ observe({
   onRestore(function(state) {
     rv$schedule <- state$values$schedule
   })
+  
+  setBookmarkExclude("file")
 
   # output$download_data<-downloadHandler(
   #   
