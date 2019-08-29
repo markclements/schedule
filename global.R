@@ -7,6 +7,7 @@ library(readxl)
 library(writexl)
 library(attempt)
 library(shinyWidgets)
+library(ggridges)
 
 source("functions.R",local = TRUE)
 enableBookmarking(store = "server")

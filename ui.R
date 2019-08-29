@@ -143,7 +143,9 @@ ui <- function(request){
           status = "info",
           width = NULL,
           solidHeader = TRUE,
-          bookmarkButton(label="Save schedule"),
+          #bookmarkButton(label="Save schedule"),
+          downloadButton(outputId="download_data",
+                         label="Download File"),
           hr(),
           downloadButton(outputId="download_plot",
                       label="Download Image")

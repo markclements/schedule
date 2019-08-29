@@ -3,30 +3,35 @@
 prepare_data<-function(df){
   df %>%
     rename_all(~str_to_lower(.)) %>%
-    gather(day_of_week,day, ends_with("day"),na.rm = T)%>%
-    select(course,title,times,day,room) %>%
-    separate(col = times, into = c("s_time","e_time"),sep=" - ") %>%
-    mutate(s_time=parse_date_time(s_time,'%I:%M %p'),
-           e_time=parse_date_time(e_time,'%I:%M %p')) %>%
-    mutate(stime=hour(s_time)+minute(s_time)/60,
-           etime=hour(e_time)+minute(e_time)/60) %>%
-    group_by(course) %>%
-    mutate(campus = case_when(any(str_detect(room,"^A|B|C|E|TC"))~"Haverhill",
-                              any(str_detect(room,"^L|LH|LC|LA|LRW"))~"Lawrence",
-                              TRUE~"Unknown")) %>%
-    #mutate(day=fct_relevel(day,c("M","T","W","R","F","S"))) %>%
-    #group_by(course) %>%
+    select(course,
+           title,
+           times,
+           site,
+           ends_with("day")) %>%
+    mutate(on_day=case_when(site=="ON"~"ON",
+                            TRUE~NA_character_))%>%
+    mutate(stime=str_extract(times,"^\\d{1,2}:\\d{2}\\s*\\w{2}"),
+           etime=str_extract(times,"\\d{1,2}:\\d{2}\\s*\\w{2}$")) %>%
+    mutate(stime=parse_date_time(stime,'%I:%M %p'),
+           etime=parse_date_time(etime,'%I:%M %p')) %>%
+    mutate(stime=hour(stime)+minute(stime)/60,
+           etime=hour(etime)+minute(etime)/60) %>%
+    gather(day_of_week, day, ends_with("day"), na.rm = T) %>%
+    select(-day_of_week,-times) %>% 
     mutate(id = 1:n(),course_id=str_c(course,id,sep="_")) %>%
-    select(-s_time,-e_time,-id) %>%
     arrange(course,day) %>%
     rowid_to_column() %>%
-    ungroup()->df
-  
+    rename(campus=site)%>%
+    mutate(campus=case_when(campus=="H"~"Haverhill",
+                            campus=="L"~"Lawrence",
+                            TRUE~"Other"))%>%
+    ungroup()->df ### output to app ###
   return(df)
 }
 
 prepare_plot_data <- function(df) {
   df %>%
+    filter(day!="ON")%>%
     group_by(day, campus) %>%
     arrange(day, stime, etime) %>%
     mutate(indx = c(0, cumsum(lead(stime) >=
@@ -46,7 +51,7 @@ prepare_plot_data <- function(df) {
   return(df)
 }
 
-plot_schedule<- function(df){
+plot_schedule<- function(df,fill){
   
   times <- c(str_c(1:11, " AM"), "12 PM", str_c(1:11, " PM"))
   
@@ -57,8 +62,8 @@ plot_schedule<- function(df){
         xmax = x2,
         ymax = etime,
         ymin = stime,
-        fill = course,
-        group = course),
+        fill = {{fill}},
+        group = {{fill}}),
       color = "black",
       alpha = 1 
     ) +
@@ -90,4 +95,27 @@ plot_schedule<- function(df){
   
   return(p)
     
+}
+
+export_file<-function(df){
+ df %>% 
+  select(day,course,title,campus,stime,etime)%>%
+  mutate(day_title=case_when(day=="M"~"mon_day",
+                             day=="T"~"tue_day",
+                             day=="W"~"wed_day",
+                             day=="R"~"thu_day",
+                             day=="F"~"fri_day",
+                             day=="S"~"sat_day",
+                             day=="ON"~"on_day")) %>%
+    
+    spread(day_title,day) %>% 
+    mutate(times= str_c(format(as.POSIXct(stime*3600,origin="2001-01-01", "GMT"),"%I:%M %p"),
+                        e_time=format(as.POSIXct(etime*3600,origin="2001-01-01", "GMT"),"%I:%M %p"),sep = " - "))%>%
+    rename(site=campus) %>%
+    select(-stime,-etime) %>%
+    mutate(site=case_when(site=="Haverhill"~"H",
+                          site=="Lawrence"~"L",
+                          site=="Other"~"ON"))->output
+    #select(course,title,mon_day,tue_day,wed_day,thu_day,fri_day,sat_day,times,site)->output
+  return(output)
 }

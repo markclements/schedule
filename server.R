@@ -21,7 +21,7 @@ server<-function(input,output,session){
     
    ### check for any errors with uploaded file 
     df <- try_catch({
-      read_excel(input$file$datapath, skip = 1) %>%
+      read_excel(input$file$datapath) %>%
         prepare_data(.)
     },
     .e = ~ {
@@ -110,7 +110,7 @@ observe({
     validate(need(length(input$course) > 0, message = "Select courses from the drop down menu to display course schedule"))
     
     rv$plot_data %>%
-      plot_schedule(.)
+      plot_schedule(.,fill=course)
   })
   
 
@@ -384,9 +384,9 @@ observe({
            ) %>%
       mutate(course=input$new_course,
              campus=input$select_campus_new,
-             room=case_when(campus=="Haverhill" ~ "E",
-                            campus=="Lawrence" ~ "L",
-                            TRUE ~ ""),
+             #campus=case_when(campus=="Haverhill" ~ "E",
+            #                  campus=="Lawrence" ~ "L",
+             #               TRUE ~ ""),
              hour=case_when(am_pm == "PM" & hour < 12 ~ hour+12,
              TRUE~hour),
              stime=hour+(min/60),
@@ -409,7 +409,9 @@ observe({
            rowid_to_column()%>%
            group_by(course) %>%
            mutate(course_id=str_c(course,1:n()))%>%
-           ungroup()->>rv$schedule}
+           ungroup()->>rv$schedule
+      print(rv$schedule)
+      }
   
     removeModal()
     }
@@ -430,30 +432,31 @@ observe({
     
   )
   
-  # Bookmarking code --------------------------
-  onBookmark(function(state) {
-    state$values$schedule <- rv$schedule
-  })
-  
-  onRestore(function(state) {
-    rv$schedule <- state$values$schedule
-    course <- state$input$course
-    updatePickerInput(session, "course", selected = course)
-  })
-  
-  setBookmarkExclude(c("file","add_course","download_plot"))
+  # # Bookmarking code --------------------------
+  # onBookmark(function(state) {
+  #   state$values$schedule <- rv$schedule
+  # })
+  # 
+  # onRestore(function(state) {
+  #   rv$schedule <- state$values$schedule
+  #   course <- state$input$course
+  #   updatePickerInput(session, "course", selected = course)
+  # })
+  # 
+  # setBookmarkExclude(c("file","add_course","download_plot"))
 
-  # output$download_data<-downloadHandler(
-  #   
-  #   filename = function() {
-  #     paste('course_schedule-', Sys.Date(), '.xlsx', sep='')
-  #   },
-  #   content = function(file) {
-  #     rv$schedule %>
-  #     
-  #   }
-  #   
-  # )
+  output$download_data<-downloadHandler(
+    
+    filename = function() {
+      paste('course_schedule-', Sys.Date(), '.xlsx', sep='')
+    },
+    content = function(file) {
+      rv$schedule %>%
+        export_file(.) %>%
+        write_xlsx(x = .,file)
+    }
+
+  )
   
   session$allowReconnect(TRUE)
 }
