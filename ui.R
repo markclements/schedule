@@ -20,16 +20,24 @@ ui <- function(request){
     tabItem(
       tabName = "upload",
       fluidRow(
+        boxPlus(width=6,
+                status = "info",
+                title=div("Whats New"), 
+                collapsible = TRUE,
+                collapsed = FALSE,
+                closable = FALSE,
+                p("1. The input file format has been updated. Please download", 
+                  a(href="example_course_file.xlsx","THE EXAMPLE FILE"),"and format input files to match."),
+                p("2. You can now download schedule files to your desktop.")
+              
+        ),  
       boxPlus(width=6,
               status = "info",
               title=div("Getting Started"), 
               collapsible = TRUE,
               collapsed = FALSE,
               closable = FALSE,
-              p("Welcome!"),
-              p("This application will allow you to visualize and manipulate course schedules. 
-                There are two options to get started:"), 
-            
+              
               p("1. Upload a properly formatted course file", 
                 a(href="example_course_file.xlsx","(EXAMPLE HERE)"), 
                 "and then switch to the visualize module"),
