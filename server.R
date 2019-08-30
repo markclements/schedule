@@ -200,7 +200,7 @@ observe({
   })
   
   observeEvent(input$apply,{
-    
+  
     #  A tibble: 1 x 14
     # day    indx course   campus        n    x2    x1 rowid title              room  stime etime duration course_id 
     # <fct> <dbl> <chr>    <chr>     <int> <dbl> <dbl> <int> <chr>              <chr> <dbl> <dbl>    <dbl> <chr>     
@@ -234,7 +234,6 @@ observe({
           stime
         rv$schedule[rv$schedule$course_id == rv$course_id, "etime"] <<-
           etime
-        
       }
       removeModal()
       
@@ -457,6 +456,11 @@ observe({
     }
 
   )
+  
+  output$keepAlive <- renderText({
+    req(input$count)
+    paste("keep alive ", input$count)
+  })
   
   session$allowReconnect(TRUE)
 }

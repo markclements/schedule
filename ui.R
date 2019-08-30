@@ -1,6 +1,7 @@
 ui <- function(request){
   
   dashboardPagePlus(
+    
   title = "Schedule Application",
   skin = "blue",
   collapse_sidebar = TRUE, 
@@ -16,7 +17,27 @@ ui <- function(request){
                      ),
                      menuItem("Help", tabName = "help", icon = icon("question"))
                    )),
-  dashboardBody(tabItems(
+  dashboardBody(
+    tags$head( ###https://support.dominodatalab.com/hc/en-us/articles/360015932932-Increasing-the-timeout-for-Shiny-Server
+      HTML(
+        "
+          <script>
+          var socket_timeout_interval
+          var n = 0
+          $(document).on('shiny:connected', function(event) {
+          socket_timeout_interval = setInterval(function(){
+          Shiny.onInputChange('count', n++)
+          }, 15000)
+          });
+          $(document).on('shiny:disconnected', function(event) {
+          clearInterval(socket_timeout_interval)
+          });
+          </script>
+          "
+      )
+    ),
+    
+    tabItems(
     tabItem(
       tabName = "upload",
       fluidRow(
@@ -70,7 +91,8 @@ ui <- function(request){
         collapsible = TRUE,
         collapsed = TRUE,
         h5("Number of course sections"),
-        uiOutput("data")
+        uiOutput("data"),
+        textOutput("keepAlive")
       )
     )),
     tabItem(
@@ -115,7 +137,7 @@ ui <- function(request){
             choices =
               c("M", "T", "W", "R", "F", "S"),
             selected =
-              c("M", "T", "W", "R", "F")
+              c("M", "T", "W", "R", "F","S")
           ),
           hr(),
           checkboxGroupInput(
@@ -131,11 +153,11 @@ ui <- function(request){
           sliderInput(
             inputId = "start_range",
             label = "Time of Day",
-            min = ymd_hms("0000-01-01 06:00:00"),
-            max = ymd_hms("0000-01-01 24:00:00"),
+            min = ymd_hms("0000-01-01 00:05:00"),
+            max = ymd_hms("0000-01-01 23:55:00"),
             value = c(
-              ymd_hms("0000-01-01 07:00:00"),
-              ymd_hms("0000-01-01 23:00:00")
+              ymd_hms("0000-01-01 00:05:00"),
+              ymd_hms("0000-01-01 23:50:00")
             ),
             timezone = "+0000",
             timeFormat = "%R",
