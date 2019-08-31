@@ -1,8 +1,7 @@
 
-### download course data; fix rounding errors 1:40 = 1.66667, rounded to 1.7 = 1:42..ack
-###   perhaps only covert to decimal numbers when plotting. Keep time format in main dataframe? 
-###   may not work well for adding and modifying courses
 ### remove course_id/row_id dependency (use row_id) or move both/one to prepare plot data function? 
+### add ability to add course title
+### add ability to modify course title
 
 server<-function(input,output,session){
   
@@ -70,6 +69,7 @@ server<-function(input,output,session){
       hour(input$start_range[1]) + minute(input$start_range[1]) / 60
     end_time <-
       hour(input$start_range[2]) + minute(input$start_range[2]) / 60
+    
     
     rv$schedule %>%
       group_by(course) %>%
@@ -409,7 +409,7 @@ observe({
            group_by(course) %>%
            mutate(course_id=str_c(course,1:n()))%>%
            ungroup()->>rv$schedule
-      print(rv$schedule)
+      
       }
   
     removeModal()
@@ -431,18 +431,18 @@ observe({
     
   )
   
-  # # Bookmarking code --------------------------
-  # onBookmark(function(state) {
-  #   state$values$schedule <- rv$schedule
-  # })
-  # 
-  # onRestore(function(state) {
-  #   rv$schedule <- state$values$schedule
-  #   course <- state$input$course
-  #   updatePickerInput(session, "course", selected = course)
-  # })
-  # 
-  # setBookmarkExclude(c("file","add_course","download_plot"))
+  # Bookmarking code --------------------------
+  onBookmark(function(state) {
+    state$values$schedule <- rv$schedule
+  })
+
+  onRestore(function(state) {
+    rv$schedule <- state$values$schedule
+    course <- state$input$course
+    updatePickerInput(session, "course", selected = course)
+  })
+
+  setBookmarkExclude(c("file","add_course","download_plot"))
 
   output$download_data<-downloadHandler(
     

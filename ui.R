@@ -43,7 +43,7 @@ ui <- function(request){
       fluidRow(
         boxPlus(width=6,
                 status = "info",
-                title=div("Whats New"), 
+                title=div("What's New"), 
                 collapsible = TRUE,
                 collapsed = FALSE,
                 closable = FALSE,
