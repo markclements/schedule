@@ -423,8 +423,8 @@ observe({
       paste('course_schedule-', Sys.Date(), '.png', sep='')
     },
     content = function(file) {
-      rv$plot_data %>% 
-        plot_schedule(.)->plot
+      rv$plot_data %>%
+        plot_schedule(.,fill=course)->plot
       ggsave(file,plot=plot,width = 7,height = 5)
       
     }
