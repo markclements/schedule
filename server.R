@@ -468,7 +468,11 @@ observe({
                        "download_data",
                        "add_course_to_data",
                        "apply",
-                       "delete"))
+                       "delete",
+                       "new_course",
+                       "new_title",
+                       "meeting_num",
+                       "count"))
 
   output$download_data<-downloadHandler(
     
