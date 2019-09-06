@@ -157,6 +157,9 @@ observe({
                    textInput(inputId = "course_id",
                               label="Selected Course",
                               value=row$course),
+                   textInput(inputId = "course_title",
+                              label="Title",
+                              value=row$title),
                  # h3(glue::glue("Modify and update ",{row$course})),
                     selectInput(inputId = "course_day",
                                 label="Day",
@@ -216,6 +219,8 @@ observe({
         input$course_day
       rv$schedule[rv$schedule$course_id == rv$course_id, "campus"] <<-
         input$select_campus
+      rv$schedule[rv$schedule$course_id == rv$course_id, "title"] <<-
+        input$course_title
       
       hour <- isolate(input$course_s_time_hr)
       min <- isolate(input$course_s_time_min / 60)
