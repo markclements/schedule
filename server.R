@@ -462,7 +462,13 @@ observe({
     updatePickerInput(session, "course", selected = course)
   })
 
-  setBookmarkExclude(c("file","add_course","download_plot","download_data"))
+  setBookmarkExclude(c("file",
+                       "add_course",
+                       "download_plot",
+                       "download_data",
+                       "add_course_to_data",
+                       "apply",
+                       "delete"))
 
   output$download_data<-downloadHandler(
     
