@@ -308,6 +308,9 @@ observe({
           textInput(inputId = "new_course",
                     label = "Unique course number and section (e.g., BIO111-E5)",
                     value = NA),
+          textInput(inputId = "new_title",
+                    label = "Course Title",
+                    value=NA),
           selectInput(inputId = "select_campus_new",
                       label="Campus",
                       choices = c("Haverhill","Lawrence", "Unknown"),
@@ -318,7 +321,7 @@ observe({
           ),
         footer = tagList(
         modalButton(label = "Cancel"),
-        actionButton(inputId = 'add_course_to_data', 'Add course and close')
+        actionButton(inputId = 'add_course_to_data', HTML('Add course </br> and close'))
      )
     )
     )
@@ -407,7 +410,7 @@ observe({
              TRUE~hour),
              stime=hour+(min/60),
              etime=stime+(dur/60),
-             title="") %>%
+             title=input$new_title) %>%
              select(-hour,-min,-am_pm,-dur)->df
     
     
