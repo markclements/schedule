@@ -191,7 +191,8 @@ observe({
                 
       footer = tagList(
         modalButton(label = "Cancel"),
-        actionButton(inputId = 'apply', 'Apply Changes and Close')
+        actionButton(inputId = 'apply', label = HTML('Apply <br/> Changes')),
+        actionButton(inputId = "delete", label = HTML("Delete <br/> Section"))
       
       )
       )
@@ -239,6 +240,17 @@ observe({
       
     }
   })
+  
+  observeEvent(input$delete,{
+      
+    if(rv$course_id>0){
+      rv$schedule %>%
+        filter(course_id!=rv$course_id)->>rv$schedule
+    }
+    removeModal()
+    
+  })
+  
   
   output$text<-renderPrint({
       
