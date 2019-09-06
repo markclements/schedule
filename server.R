@@ -321,7 +321,7 @@ observe({
           ),
         footer = tagList(
         modalButton(label = "Cancel"),
-        actionButton(inputId = 'add_course_to_data', HTML('Add course </br> and close'))
+        actionButton(inputId = 'add_course_to_data', HTML('Add course and close'))
      )
     )
     )
