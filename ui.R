@@ -49,8 +49,8 @@ ui <- function(request){
                 closable = FALSE,
                 p("1. The input file format has been updated. Please download", 
                   a(href="example_course_file.xlsx","THE EXAMPLE FILE"),"and format input files to match."),
-                p("2. You can now download schedule files to your desktop.")
-              
+                p("2. You can now download schedule files to your desktop."),
+                shinyjs::useShinyjs()
         ),  
       boxPlus(width=6,
               status = "info",

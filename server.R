@@ -315,7 +315,7 @@ observe({
   
   observeEvent(input$add_course,{
 
-  
+    print("error add")
     showModal(
       modalDialog(size = "l",
         div(
@@ -350,6 +350,7 @@ observe({
   })
   
   output$new_course_input<-renderUI({
+    print("error render")
     map(1:input$meeting_num,~div(
                             fluidRow(
                               column(width=2,
@@ -392,6 +393,7 @@ observe({
   
   observeEvent(input$add_course_to_data,{
     
+    print("error apply")
     # # A tibble: 1 x 9
     # rowid course     title           day   room  stime etime campus    course_id   
     # <int> <chr>      <chr>           <chr> <chr> <dbl> <dbl> <chr>     <chr>       
