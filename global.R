@@ -12,3 +12,4 @@ library(shinyjs)
 
 source("functions.R",local = TRUE)
 enableBookmarking(store = "server")
+options(shiny.fullstacktrace=TRUE, shiny.deepstacktrace=TRUE)

@@ -329,14 +329,14 @@ observe({
                         ),
           textInput(inputId = "new_course",
                     label = "Unique course number and section (e.g., BIO111-E5)",
-                    value = NA),
+                    value = ""),
           textInput(inputId = "new_title",
                     label = "Course Title",
-                    value=NA),
+                    value=""),
           selectInput(inputId = "select_campus_new",
                       label="Campus",
                       choices = c("Haverhill","Lawrence", "Unknown"),
-                      selected = NA),
+                      selected =""),
           uiOutput("new_course_input"),
           uiOutput("warning")
           
