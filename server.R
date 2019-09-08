@@ -49,12 +49,14 @@ server<-function(input,output,session){
   output$data <- renderUI({
     validate(need(!is.null(rv$schedule), message = "Upload a file"))
  ### report some stats about file contents to user after successful file uplaod.    
-    rv$schedule %>%
-      select(course, campus) %>%
-      mutate(course = str_extract(course, "^.{6}")) %>%
-      group_by(course, campus) %>%
-      count() %>%
-      spread(campus, n) -> summary
+    # rv$schedule %>%
+    #   select(course, campus) %>%
+    #   mutate(course = str_extract(course, "^.{6}")) %>%
+    #   group_by(course, campus) %>%
+    #   count() %>%
+    #   spread(campus, n) -> summary
+    
+    rv$schedule->summary
     
     output$aa <- DT::renderDataTable(summary)
     DT::dataTableOutput("aa")
@@ -213,6 +215,7 @@ observe({
     
     if(rv$course_id>0) {
       #x[x$day=="M","time"]
+      
       rv$schedule[rv$schedule$course_id == rv$course_id, "course"] <<-
         input$course_id
       rv$schedule[rv$schedule$course_id == rv$course_id, "day"] <<-
@@ -459,7 +462,7 @@ observe({
   onRestore(function(state) {
     rv$schedule <- state$values$schedule
     course <- state$input$course
-    updatePickerInput(session, "course", selected = course)
+    updatePickerInput(session = session, inputId = "course", selected = course)
   })
 
   setBookmarkExclude(c("file",

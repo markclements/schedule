@@ -178,7 +178,20 @@ read_xlsx("data/Master Schedule Reform Common Sections USE THIS ONE April 24 201
     
     
      seq(8,by=1.5,length.out=7)
-    
+     
+     
+     
+library(fs)     
+     
+dir_info("/var/log/shiny-server/")
+
+dir_ls("/srv/shiny-server/")
+       
+#/var/log/shiny-server/schedule-shiny-20190907-210738-41687.log" = add file apply button crash
+
+#/var/log/shiny-server/schedule-shiny-20190907-210513-42392.log = modify file apply button crash
+     
+       
     
     
   
