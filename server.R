@@ -56,10 +56,13 @@ server<-function(input,output,session){
     #   count() %>%
     #   spread(campus, n) -> summary
     
-    rv$schedule->summary
+    # rv$schedule->summary
+    # 
+    # output$aa <- DT::renderDataTable(summary)
+    # DT::dataTableOutput("aa")
     
-    output$aa <- DT::renderDataTable(summary)
-    DT::dataTableOutput("aa")
+    output$aa<-renderPrint(reactiveValuesToList(input))
+    verbatimTextOutput("aa")
     
   })
   
@@ -394,10 +397,10 @@ observe({
     # <int> <chr>      <chr>           <chr> <chr> <dbl> <dbl> <chr>     <chr>       
     #   1     1 BIO111-B1A Intro Biology I R     E356     14  15.7 Haverhill BIO111-B1A_1
     
-    days<-map_chr(1:input$meeting_num,~input[[paste0("course_day",.)]])
+    days<-map(1:input$meeting_num,~input[[paste0("course_day",.)]]) %>% unlist()
     hour<-map_dbl(1:input$meeting_num,~input[[paste0("course_s_time_hr",.)]])
     min<-map_dbl(1:input$meeting_num,~input[[paste0("course_s_time_min",.)]])
-    am_pm<-map_chr(1:input$meeting_num,~input[[paste0("AM_PM",.)]])
+    am_pm<-map(1:input$meeting_num,~input[[paste0("AM_PM",.)]]) %>% unlist()
     dur<-map_dbl(1:input$meeting_num,~input[[paste0("course_dur",.)]])
     
     
@@ -475,6 +478,8 @@ observe({
     state$values$schedule <- rv$schedule
   })
 
+  observe({setBookmarkExclude(names(input))}, priority = 100, autoDestroy = TRUE)
+  
   onRestore(function(state) {
     rv$schedule <- state$values$schedule
     course <- state$input$course
@@ -493,7 +498,7 @@ observe({
   #                      "meeting_num",
   #                      "count"))
 
-  observe({setBookmarkExclude(names(input))}, priority = 100, autoDestroy = TRUE)
+  
   
   output$download_data<-downloadHandler(
     
