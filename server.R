@@ -481,18 +481,20 @@ observe({
     updatePickerInput(session = session, inputId = "course", selected = course)
   })
 
-  setBookmarkExclude(c("file",
-                       "add_course",
-                       "download_plot",
-                       "download_data",
-                       "add_course_to_data",
-                       "apply",
-                       "delete",
-                       "new_course",
-                       "new_title",
-                       "meeting_num",
-                       "count"))
+  # setBookmarkExclude(c("file",
+  #                      "add_course",
+  #                      "download_plot",
+  #                      "download_data",
+  #                      "add_course_to_data",
+  #                      "apply",
+  #                      "delete",
+  #                      "new_course",
+  #                      "new_title",
+  #                      "meeting_num",
+  #                      "count"))
 
+  observe({setBookmarkExclude(names(input))}, priority = 100, autoDestroy = TRUE)
+  
   output$download_data<-downloadHandler(
     
     filename = function() {
