@@ -192,6 +192,10 @@ dir_ls("/srv/shiny-server/")
 #/var/log/shiny-server/schedule-shiny-20190907-210513-42392.log = modify file apply button crash
      
        
+
+read_xlsx("data/course_schedule-2019-09-08.xlsx") %>%
+  prepare_data() %>% View()
+
     
     
   

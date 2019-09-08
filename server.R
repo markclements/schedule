@@ -215,15 +215,15 @@ observe({
     
     if(rv$course_id>0) {
       #x[x$day=="M","time"]
-      
-      rv$schedule[rv$schedule$course_id == rv$course_id, "course"] <<-
-        input$course_id
-      rv$schedule[rv$schedule$course_id == rv$course_id, "day"] <<-
-        input$course_day
-      rv$schedule[rv$schedule$course_id == rv$course_id, "campus"] <<-
-        input$select_campus
-      rv$schedule[rv$schedule$course_id == rv$course_id, "title"] <<-
-        input$course_title
+      # x[!is.na(x$a) & x$a==2,]$b <- 99
+      # rv$schedule[rv$schedule$course_id == rv$course_id, "course"] <<-
+      #   input$course_id
+      # rv$schedule[rv$schedule$course_id == rv$course_id, "day"] <<-
+      #   input$course_day
+      # rv$schedule[rv$schedule$course_id == rv$course_id, "campus"] <<-
+      #   input$select_campus
+      # rv$schedule[rv$schedule$course_id == rv$course_id, "title"] <<-
+      #   input$course_title
       
       hour <- isolate(input$course_s_time_hr)
       min <- isolate(input$course_s_time_min / 60)
@@ -239,10 +239,26 @@ observe({
         stime <- hour + min
         etime <- stime + (dur / 60)
         
-        rv$schedule[rv$schedule$course_id == rv$course_id, "stime"] <<-
-          stime
-        rv$schedule[rv$schedule$course_id == rv$course_id, "etime"] <<-
-          etime
+        # rv$schedule[rv$schedule$course_id == rv$course_id, "stime"] <<-
+        #   stime
+        # rv$schedule[rv$schedule$course_id == rv$course_id, "etime"] <<-
+        #   etime
+        
+        tibble(course_id=rv$course_id,
+               course=input$course_id,
+               day=input$course_day,
+               campus=input$select_campus,
+               title=input$course_title,
+               stime=stime,
+               etime=etime
+               )->d
+        
+        rv$schedule %>% 
+          filter(course_id!=rv$course_id) %>%
+          bind_rows(.,d)->rv$schedule
+        
+        
+        
       }
       removeModal()
       
