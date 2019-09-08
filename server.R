@@ -486,6 +486,8 @@ observe({
     rv$schedule <- state$values$schedule
     course <- state$input$course
     updatePickerInput(session = session, inputId = "course", selected = course)
+    input$meeting_num<-1
+    input$new_course<-NA
   })
 
   # setBookmarkExclude(c("file",
