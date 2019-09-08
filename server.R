@@ -399,10 +399,10 @@ observe({
     # <int> <chr>      <chr>           <chr> <chr> <dbl> <dbl> <chr>     <chr>       
     #   1     1 BIO111-B1A Intro Biology I R     E356     14  15.7 Haverhill BIO111-B1A_1
     
-    days<-map(1:input$meeting_num,~input[[paste0("course_day",.)]]) %>% unlist()
+    days<-map_chr(1:input$meeting_num,~input[[paste0("course_day",.)]])
     hour<-map_dbl(1:input$meeting_num,~input[[paste0("course_s_time_hr",.)]])
     min<-map_dbl(1:input$meeting_num,~input[[paste0("course_s_time_min",.)]])
-    am_pm<-map(1:input$meeting_num,~input[[paste0("AM_PM",.)]]) %>% unlist()
+    am_pm<-map_chr(1:input$meeting_num,~input[[paste0("AM_PM",.)]])
     dur<-map_dbl(1:input$meeting_num,~input[[paste0("course_dur",.)]])
     
     
@@ -486,8 +486,6 @@ observe({
     rv$schedule <- state$values$schedule
     course <- state$input$course
     updatePickerInput(session = session, inputId = "course", selected = course)
-    input$meeting_num<-1
-    input$new_course<-NA
   })
 
   # setBookmarkExclude(c("file",
