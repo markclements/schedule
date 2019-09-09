@@ -391,7 +391,7 @@ observe({
     
   })
   
-  observeEvent(input$add_course_to_data,{
+  observeEvent(input$add_course_to_data,ignoreNULL = TRUE, ignoreInit = TRUE,{
     
     print("error apply")
     # # A tibble: 1 x 9
