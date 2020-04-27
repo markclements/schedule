@@ -1,7 +1,6 @@
 ui <- dashboardPagePlus(
   title = "Schedule Application",
   skin = "blue",
-  collapse_sidebar = TRUE, 
   dashboardHeaderPlus(),
   dashboardSidebar(collapsed = TRUE,
                    width=100,
@@ -134,20 +133,17 @@ ui <- dashboardPagePlus(
           )
         ),## end box
         boxPlus(
-          title="Save",
+          title="Download",
           collapsible = TRUE,
           collapsed = TRUE,
           closable = FALSE,
           status = "info",
           width = NULL,
           solidHeader = TRUE,
-          bookmarkButton(label="Save schedule"),
-          hr(),
           downloadButton(outputId="download_plot",
-                      label="Download Image")
-          
-          #downloadButton(outputId="download_data",
-           #            label="Data") ## after fix time rouding errors 
+                      label="Image"),
+          downloadButton(outputId="download_data",
+                       label="Data")
         )## end box
       ),
       ## end column

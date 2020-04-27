@@ -1,8 +1,8 @@
 
-### download course data; fix rounding errors 1:40 = 1.66667, rounded to 1.7 = 1:42..ack
-###   perhaps only covert to decimal numbers when plotting. Keep time format in main dataframe? 
-###   may not work well for adding and modifying courses
+### download plot image
+### download course data
 ### remove course_id/row_id dependency (use row_id) or move both/one to prepare plot data function? 
+### allow user to modify course number
 
 server<-function(input,output,session){
   
@@ -430,17 +430,5 @@ observe({
     
   )
 
-  # output$download_data<-downloadHandler(
-  #   
-  #   filename = function() {
-  #     paste('course_schedule-', Sys.Date(), '.xlsx', sep='')
-  #   },
-  #   content = function(file) {
-  #     rv$schedule %>
-  #     
-  #   }
-  #   
-  # )
-  
   session$allowReconnect(TRUE)
 }
