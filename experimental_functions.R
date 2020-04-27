@@ -41,6 +41,8 @@ d %>%
     ggplot()+
     geom_step(aes(y,zz))
 
+
+wq
     
 
 d<-tibble(name=c("one","two","three","four","five"),
