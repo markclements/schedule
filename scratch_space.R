@@ -196,6 +196,7 @@ dir_ls("/srv/shiny-server/")
 read_xlsx("data/course_schedule-2019-09-08.xlsx") %>%
   prepare_data() %>% View()
 
-    
+sudo su - -c "R -e \"install.packages('shinyWidgets', lib ='/usr/lib/R/site-library',repos='http://cran.rstudio.com/')\""
+
     
   
