@@ -1,11 +1,11 @@
 ui <- function(request){
   
-  dashboardPagePlus(
+  dashboardPage(
     
   title = "Schedule Application",
   skin = "blue",
-  collapse_sidebar = TRUE, 
-  dashboardHeaderPlus(),
+  #collapse_sidebar = TRUE, 
+  dashboardHeader(),
   dashboardSidebar(collapsed = TRUE,
                    width=100,
                    sidebarMenu(
@@ -41,7 +41,7 @@ ui <- function(request){
     tabItem(
       tabName = "upload",
       fluidRow(
-        boxPlus(width=6,
+        box(width=6,
                 status = "info",
                 title=div("What's New"), 
                 collapsible = TRUE,
@@ -52,7 +52,7 @@ ui <- function(request){
                 p("2. You can now download schedule files to your desktop."),
                 shinyjs::useShinyjs()
         ),  
-      boxPlus(width=6,
+      box(width=6,
               status = "info",
               title=div("Getting Started"), 
               collapsible = TRUE,
@@ -70,7 +70,7 @@ ui <- function(request){
               )
       ),
       fluidRow(
-      boxPlus(
+      box(
         width = 6,
         status = "info",
         fileInput(
@@ -83,7 +83,7 @@ ui <- function(request){
         )
       )),
       fluidRow(
-      boxPlus(
+      box(
         width = 6,
         status = "info",
         title = "Summary", 
@@ -99,7 +99,7 @@ ui <- function(request){
       tabName = "visualize",
       column(
         width = 2,
-        boxPlus(
+        box(
           width = NULL,
           closable = FALSE,
           status = "info",
@@ -115,14 +115,14 @@ ui <- function(request){
                         `actions-box` = TRUE,
                         title = "Select Courses",
                         `selected-text-format` = "count > 3"))),
-        boxPlus(
+        box(
           width = NULL,
           closable = FALSE,
           status = "info",
           actionButton(inputId = "add_course",
                        label = paste0("Add course"))
         ),
-        boxPlus(
+        box(
           width = NULL,
           collapsible = TRUE,
           collapsed = TRUE,
@@ -165,7 +165,7 @@ ui <- function(request){
             ticks = F
           )
         ),## end box
-        boxPlus(
+        box(
           title="Save",
           collapsible = TRUE,
           collapsed = TRUE,
@@ -188,7 +188,7 @@ ui <- function(request){
       ## end column
       column(
         width = 10,
-        boxPlus(
+        box(
           closable = FALSE,
           solidHeader = TRUE,
           collapsible = TRUE,

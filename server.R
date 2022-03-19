@@ -100,22 +100,25 @@ server<-function(input,output,session){
                      selected=course,
                      choices = sort(rv$class_list))
   })
-  
- 
+
 observe({
     req(rv$schedule)
-    rv$schedule %>%
-      filter(course %in% input$course)%>%
-      prepare_plot_data(.)->rv$plot_data
+
+  rv$schedule %>%
+     filter(course %in% input$course) -> temp
+  if (nrow(temp) > 0) {
+     prepare_plot_data(temp) -> rv$plot_data
+    }
   })
-  
+
+
   output$plot <- renderPlot({
     validate(need(nrow(rv$schedule) > 0, message = "Upload a file or add courses manually"))
     
     validate(need(length(input$course) > 0, message = "Select courses from the drop down menu to display course schedule"))
     
     rv$plot_data %>%
-      plot_schedule(.,fill=course)
+      plot_schedule(., fill = course)
   })
   
 

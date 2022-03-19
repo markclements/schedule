@@ -29,33 +29,53 @@ prepare_data<-function(df){
   return(df)
 }
 
+place_events <- function(d) {
+    d <- mutate(d, col = 0)
+    for (i in seq_along(d$col)) {
+        if (i == 1) {
+            d$col[i] <- 1
+            next
+        }
+        placed <- FALSE
+    for (j in 1:max(d$col)) {
+           collide <- d$stime[i] < last(d$etime[d$col == j])
+           if (!collide) {
+                d$col[i] <- j
+                placed <- TRUE
+                 break
+            }
+        }
+        if (!placed) d$col[i] <- j + 1
+        }
+       return(d)
+    }
+
+
 prepare_plot_data <- function(df) {
   df %>%
-    filter(day!="ON")%>%
+    filter(day != "ON") %>%
     group_by(day, campus) %>%
     arrange(day, stime, etime) %>%
     mutate(indx = c(0, cumsum(lead(stime) >=
                                 cummax(etime))[-n()])) %>%
-    
-    group_by(day, indx, course_id, campus) %>%
-    arrange(day, indx, course_id, stime) %>%
-    nest() %>%
     group_by(day, indx, campus) %>%
-    mutate(n = n()) %>%
-    mutate(x2 = cumsum(1 / n)) %>% ### right side of rectangle
-    mutate(x1 = lag(x2, default = 0)) %>%  ### left side of rectangle
-    unnest() %>%
-    ungroup() %>%
-    mutate(day=fct_relevel(day,c("M","T","W","R","F","S")))-> df
+    nest() %>%
+    mutate(data = map(data, ~place_events(.))) %>%
+    unnest(data) %>%
+    mutate(col = col - 0.95) %>%
+    mutate(colr = col + 0.95) %>%
+    mutate(x1 = col / (max(col) + 1), x2 = colr / (max(col) + 1)) %>%
+    ungroup() %>% 
+    mutate(day = fct_relevel(day, c("M","T","W","R","F","S"))) -> df
   
   return(df)
 }
 
-plot_schedule<- function(df,fill){
-  
+plot_schedule <- function(df, fill) {
+
   times <- c(str_c(1:11, " AM"), "12 PM", str_c(1:11, " PM"))
-  
-  ggplot(df) +
+
+ggplot(df) +
     geom_rect(
       aes(
         xmin = x1,
@@ -63,16 +83,16 @@ plot_schedule<- function(df,fill){
         ymax = etime,
         ymin = stime,
         fill = {{fill}},
-        group = {{fill}}),
-      color = "black",
-      alpha = 1 
-    ) +
+        group = {{fill}}
+    ), 
+    alpha = 0.6, 
+    color = "black") +
     geom_text(
       aes(
         x = x1,
         y = (stime + abs(stime - etime) / 2),
         label = course,
-        size = 1 / n
+        size = (x2 - x1) * 100
       ),
       hjust = 0,
       vjust = 0.5,
@@ -81,7 +101,7 @@ plot_schedule<- function(df,fill){
     scale_size_area(max_size = 4) +
     scale_y_reverse(breaks = 1:23,
                     labels = times) +
-    theme(
+theme(
       legend.position = "none",
       panel.grid.major.x = element_blank(),
       panel.grid.minor.x = element_blank(),
@@ -91,7 +111,7 @@ plot_schedule<- function(df,fill){
     xlab("") +
     ylab("") +
     guides(fill = FALSE) +
-    facet_grid(campus ~ day)->p
+    facet_grid(campus ~ day) -> sched->p
   
   return(p)
     
