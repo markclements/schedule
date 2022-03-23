@@ -35,30 +35,6 @@ expand_events <- function(d) {
   return(d)
 }
 
-
-
-d <- find_clusters(d)
-d
-d |>
-    filter(cluster == 1) -> s
-place_events(d) %>% 
-    ggplot() +
-    geom_rect(
-        aes(
-            xmin = col,
-            xmax = col + 0.9,
-            ymin = stime,
-            ymax = etime,
-            fill = name
-        ),
-        alpha = 0.4,
-        color = "black"
-    ) +
-    scale_y_reverse() -> sched
-    ggplotly(sched)
-
-
-
 ### genetic algorithim functions below 
 
 collides_event <- function(a, b) {
@@ -80,56 +56,30 @@ event_area <- function(d) {
     return(list(event_area, sum_event_area, whole_area))
 }
 
+df <- read_xlsx("www/example_course_file_full.xlsx")
 
-read_xlsx("www/example_course_file_full.xlsx") %>% 
-    prepare_data() %>% 
-    prepare_plot_data() %>% 
-    plot_schedule(., fill = course)
+df %>%
+    prepare_data() %>%
+    prepare_plot_data() -> temp
+    plot_schedule(., fill = course) -> sched
 
+plotly::ggplotly(sched)
 
+temp %>%
+    filter(campus == "Haverhill") %>%
+    ggplot() +
+    geom_rect_interactive(
+        aes(
+            xmin = x1,
+            xmax = x2,
+            ymin = stime,
+            ymax = etime,
+            fill = course,
+            tooltip = course,
+            data_id = course
+        )) +
+    theme(
+        legend.position = "none"
+    ) -> sched
 
-
-
-times <- c(str_c(1:11, " AM"), "12 PM", str_c(1:11, " PM"))
-
-ggplot(prepd) +
-    geom_rect(
-      aes(
-        xmin = x1,
-        xmax = x2,
-        ymax = etime,
-        ymin = stime,
-        fill = course,
-        group = course
-    ), 
-    alpha = 0.6, 
-    color = "black") +
-    geom_text(
-      aes(
-        x = x1,
-        y = (stime + abs(stime - etime) / 2),
-        label = course,
-        size = (x2 - x1) * 100
-      ),
-      hjust = 0,
-      vjust = 0.5,
-      nudge_x = 0.01
-    ) +
-    scale_size_area(max_size = 4) +
-    scale_y_reverse(breaks = 1:23,
-                    labels = times) +
-theme(
-      legend.position = "none",
-      panel.grid.major.x = element_blank(),
-      panel.grid.minor.x = element_blank(),
-      axis.ticks.x = element_blank(),
-      axis.text.x = element_blank()
-    ) +
-    xlab("") +
-    ylab("") +
-    guides(fill = FALSE) +
-    facet_grid(campus ~ day) -> sched
-
-ggplotly(sched)    
-
-
+girafe(ggobj = sched)
