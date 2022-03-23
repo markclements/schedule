@@ -3,15 +3,15 @@
 ### add ability to add course title
 ### add ability to modify course title
 
-server<-function(input,output,session){
-  
-  
+server <- function(input, output, session) {
+
+
   if (interactive()) {
-    cat('Running in interactive mode, so will stop session at end.')
+    cat('Running in interactive mode, will stop session at end.', '\n')
     session$onSessionEnded(stopApp)
   }
-  
-  
+
+
   rv <- reactiveValues()
   
   observeEvent(input$file, {
@@ -103,12 +103,12 @@ server<-function(input,output,session){
 
 observe({
     req(rv$schedule)
-
   rv$schedule %>%
-     filter(course %in% input$course) -> temp
+    filter(course %in% input$course) -> temp
   if (nrow(temp) > 0) {
-     prepare_plot_data(temp) -> rv$plot_data
-    }
+    prepare_plot_data(temp) -> rv$plot_data
+  }
+
   })
 
 
@@ -122,94 +122,94 @@ observe({
   })
   
 
-  observeEvent(input$plot_click, {
+  # observeEvent(input$plot_click, {
    
   
-    #  A tibble: 1 x 14
-    # day    indx course   campus        n    x2    x1 rowid title              room  stime etime duration course_id 
-    # <fct> <dbl> <chr>    <chr>     <int> <dbl> <dbl> <int> <chr>              <chr> <dbl> <dbl>    <dbl> <chr>     
-    #   1 M    0 ACC101-8 Haverhill     1     1     0     1 Intro Accounting I C107      8  9.25     1.25 ACC101-8_1     
+  #   #  A tibble: 1 x 14
+  #   # day    indx course   campus        n    x2    x1 rowid title              room  stime etime duration course_id 
+  #   # <fct> <dbl> <chr>    <chr>     <int> <dbl> <dbl> <int> <chr>              <chr> <dbl> <dbl>    <dbl> <chr>     
+  #   #   1 M    0 ACC101-8 Haverhill     1     1     0     1 Intro Accounting I C107      8  9.25     1.25 ACC101-8_1     
   
-    click<-input$plot_click
+  #   click<-input$plot_click
 
-      rv$plot_data %>%
-        filter(click$x >= x1 &
-               click$x <= x2 &
-               click$y >= stime &
-               click$y <= etime &
-               day == click$panelvar1 &
-               campus == click$panelvar2
-                 )->row
+  #     rv$plot_data %>%
+  #       filter(click$x >= x1 &
+  #              click$x <= x2 &
+  #              click$y >= stime &
+  #              click$y <= etime &
+  #              day == click$panelvar1 &
+  #              campus == click$panelvar2
+  #                )->row
 
-    rv$course_id<<-row$course_id
+  #   rv$course_id<<-row$course_id
     
   
     
-  if (length(row$course_id>1)){   
+  # if (length(row$course_id>1)){   
     
-    hour<-floor(row$stime)
-    min<-(row$stime-hour)*60
+  #   hour<-floor(row$stime)
+  #   min<-(row$stime-hour)*60
     
-    if (row$stime>=13) hour<-hour-12
+  #   if (row$stime>=13) hour<-hour-12
     
-    if (row$stime<12) am_pm<-"AM"
-    else  am_pm<-"PM"    
+  #   if (row$stime<12) am_pm<-"AM"
+  #   else  am_pm<-"PM"    
     
-    dur<-abs(row$etime-row$stime)*60
+  #   dur<-abs(row$etime-row$stime)*60
     
  
-   showModal( 
-    #### Modify course attribute dynamic UI ### 
-    modalDialog(size = "s",
-                div(
-                   textInput(inputId = "course_id",
-                              label="Selected Course",
-                              value=row$course),
-                   textInput(inputId = "course_title",
-                              label="Title",
-                              value=row$title),
-                 # h3(glue::glue("Modify and update ",{row$course})),
-                    selectInput(inputId = "course_day",
-                                label="Day",
-                                choices = c("M","T","W","R","F","S"),
-                                selected = row$day),
-                    numericInput(inputId = "course_s_time_hr",
-                                 label="Start (hr)",
-                                 min = 1,
-                                 max=12,
-                                 step = 1,
-                                 value=hour),
-                    numericInput(inputId = "course_s_time_min",
-                                 label="Start (min)",
-                                 min = 0,
-                                 max=59,
-                                 step=1,
-                                 value=min),
-                    selectInput(inputId = "AM_PM",
-                                label="AM/PM",
-                                choices = c("AM","PM"),
-                                selected = am_pm),
-                    numericInput(inputId = "course_dur",
-                                 label="Duration (min)",
-                                 min = 1,
-                                 max=600,
-                                 step=1,
-                                 value=dur), 
-                   selectInput(inputId = "select_campus",
-                               label="Campus",
-                               choices = c("Haverhill","Lawrence", "Unknown"),
-                               selected = row$campus)),
+  #  showModal( 
+  #   #### Modify course attribute dynamic UI ### 
+  #   modalDialog(size = "s",
+  #               div(
+  #                  textInput(inputId = "course_id",
+  #                             label="Selected Course",
+  #                             value=row$course),
+  #                  textInput(inputId = "course_title",
+  #                             label="Title",
+  #                             value=row$title),
+  #                # h3(glue::glue("Modify and update ",{row$course})),
+  #                   selectInput(inputId = "course_day",
+  #                               label="Day",
+  #                               choices = c("M","T","W","R","F","S"),
+  #                               selected = row$day),
+  #                   numericInput(inputId = "course_s_time_hr",
+  #                                label="Start (hr)",
+  #                                min = 1,
+  #                                max=12,
+  #                                step = 1,
+  #                                value=hour),
+  #                   numericInput(inputId = "course_s_time_min",
+  #                                label="Start (min)",
+  #                                min = 0,
+  #                                max=59,
+  #                                step=1,
+  #                                value=min),
+  #                   selectInput(inputId = "AM_PM",
+  #                               label="AM/PM",
+  #                               choices = c("AM","PM"),
+  #                               selected = am_pm),
+  #                   numericInput(inputId = "course_dur",
+  #                                label="Duration (min)",
+  #                                min = 1,
+  #                                max=600,
+  #                                step=1,
+  #                                value=dur), 
+  #                  selectInput(inputId = "select_campus",
+  #                              label="Campus",
+  #                              choices = c("Haverhill","Lawrence", "Unknown"),
+  #                              selected = row$campus)),
                 
-      footer = tagList(
-        modalButton(label = "Cancel"),
-        actionButton(inputId = 'apply', label = HTML('Apply <br/> Changes')),
-        actionButton(inputId = "delete", label = HTML("Delete <br/> Section"))
+  #     footer = tagList(
+  #       modalButton(label = "Cancel"),
+  #       actionButton(inputId = 'apply', label = HTML('Apply <br/> Changes')),
+  #       actionButton(inputId = "delete", label = HTML("Delete <br/> Section"))
       
-      )
-      )
-   )}
+  #     )
+  #     )
+  #  )}
    
-  })
+  # })
   
   observeEvent(input$apply,{
   
