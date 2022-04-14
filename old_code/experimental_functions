@@ -1,0 +1,99 @@
+read_xlsx("www/example_course_file.xlsx",skip = 1) %>%
+  prepare_data() %>%
+  filter(!is.na(stime)) %>%
+  mutate(dur=etime-stime)%>%
+  arrange(day,stime,desc(dur),etime) %>%
+  mutate(col=NA) %>%
+  mutate(column_grp=NA)%>%
+  filter(day=="T") -> d
+
+## d sorted by stime, desc(dur), and etime
+
+tibble(   day = "M",
+          stime = sample(1:10, 20, replace = T),
+          #etime = c(10, 10, 11, 12, 12, 12)
+          ) %>%
+    mutate(etime = stime + sample(1:3, 20, replace = T)) %>%
+    mutate(dur = etime - stime) %>%
+    arrange(stime, desc(dur), etime) %>%
+    mutate(col = 0, 
+            cluster = 0,
+            name = as.character(1:20)) -> d
+
+
+## second pass to expand events to the right
+expand_events <- function(d) {
+    d <- mutate(d, col_r = col + 1)
+
+    for (i in seq_along(d$col)) {
+        for (j in seq_along(d$col)) {
+            if (d$col[j] >  d$col[i] & d$stime[i] >= d$etime[j]) { #look for collisions in columns to the right of i
+                d$col_r[i] <- d$col_r[i] + 1 # if there is no collision, expand into empty column to the right
+            }
+        }
+    }
+  return(d)
+}
+
+### genetic algorithim functions below 
+
+collides_event <- function(a, b) {
+    # a and b are rows of the data frame
+    y_collision <- a$y_min < b$y_max & a$y_max > b$y_min
+    x_collision <- a$x_min < b$x_max & a$x_max > b$x_min
+
+    return(c(y = y_collision, x = x_collision))
+}
+
+collides_border <- function(a) {
+    return(a$x_min < 0 || a$x_max > 1)
+}
+
+event_area <- function(d) {
+    event_area <- (d$y_max - d$y_min) * (d$x_max - d$x_min)
+    sum_event_area <- sum(event_area)
+    whole_area <- sum(max(d$y_max) - min(d$y_min))
+    return(list(event_area, sum_event_area, whole_area))
+}
+
+df <- read_xlsx("www/example_course_file_full.xlsx")
+
+df %>%
+    prepare_data() %>%
+    prepare_plot_data() -> temp
+    plot_schedule(., fill = course) -> sched
+
+plotly::ggplotly(sched)
+
+temp %>%
+    filter(campus == "Haverhill") %>%
+    ggplot() +
+    geom_rect_interactive(
+        aes(
+            xmin = x1,
+            xmax = x2,
+            ymin = stime,
+            ymax = etime,
+            fill = course,
+            tooltip = course,
+            data_id = course
+        )) +
+    theme(
+        legend.position = "none"
+    ) -> sched
+
+girafe(ggobj = sched)
+
+
+tibble::tibble(
+    grp = c(1, 1, 1, 1, 2, 2, 2, 2),
+    x = c(0, 0, 2, 2, 2, 2, 3, 3),
+    y = c(0, 2, 2, 0, 0, 2, 2, 0)
+) |>
+plotly::plot_ly(x = ~x, y = ~y) |>
+        plotly::add_polygons(split = ~grp)
+
+# xmin, stime
+# xmin, etime
+# xmax, etime
+# xmax, stime

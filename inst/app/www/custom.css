@@ -1,0 +1,24 @@
+.time_picker .form-control {
+    width: 40px;
+    height: 30px;
+    padding: 0;
+    text-align: center;
+}
+
+.time_picker {
+    display: flex;
+    width: 200px
+}
+
+.time_picker .form-group {
+    width: 40px;
+}
+
+.time_picker p {
+    margin: 0px, 0px, 0px, 0px;
+    font-size: large;
+}
+
+.time_picker .radio-group-buttons {
+    width: 100px;
+}
