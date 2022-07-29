@@ -16,7 +16,7 @@ app_server <- function(input, output, session) {
   mod_schedule_plot_server("schedule_plot_1", rv)
 
   observe({
-
+    print(rv$schedule)
   })
 
    if (interactive()) {
