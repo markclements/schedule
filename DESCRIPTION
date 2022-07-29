@@ -14,6 +14,7 @@ Imports:
     golem (>= 0.3.2),
     htmltools,
     lubridate,
+    pkgload,
     plotly,
     purrr,
     readxl,
